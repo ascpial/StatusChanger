@@ -59,7 +59,7 @@ class RPC_tk(Tk):
 class Saisie:
     def __init__(self, root, name, state_name, value_name, config):
         self.config = config
-        if not (state_name in config and value_name in config):
+        if not (state_name in config["tk"] and value_name in config["tk"]):
             config["tk"][state_name] = IntVar()
             config["tk"][value_name] = StringVar()
         self.state = config["tk"][state_name]
@@ -82,7 +82,7 @@ class Saisie:
 class DoubleSaisie:
     def __init__(self, root, text1, text2, state_name, value1_name, value2_name, config):
         self.config = config
-        if not (state_name in config and value2_name in config and value2_name in config):
+        if not (state_name in config["tk"] and value2_name in config["tk"] and value2_name in config["tk"]):
             config["tk"][state_name] = IntVar()
             config["tk"][value1_name] = StringVar()
             config["tk"][value2_name] = StringVar()
@@ -110,7 +110,7 @@ class DoubleSaisie:
 class SaisieInt:
     def __init__(self, root, name, state_name, value_name, config):
         self.config = config
-        if not (state_name in config and value_name in config):
+        if not (state_name in config["tk"] and value_name in config["tk"]):
             config["tk"][state_name] = IntVar()
             config["tk"][value_name] = IntVar()
         self.state = config["tk"][state_name]
