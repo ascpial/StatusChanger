@@ -8,11 +8,11 @@ import settings
 import webbrowser
 
 class RPC_tk(Tk):
-    def __init__(self, RPC, id, pipe):
+    def __init__(self, RPC, id, config, pipe=0):
         self.RPC = RPC
+        self.config = config
         Tk.__init__(self)
-        color = "#36393f"
-        self.config = settings.Settings(get_config_file(), self)
+        self.config.get_tk(self)
         self.iconbitmap(os.path.join(application_path, "StatusChanger.ico"))
         self.title(f"StatusChanger (pipe {pipe})")
         Label(self, text="StatusChanger :").pack()
@@ -65,52 +65,14 @@ class RPC_tk(Tk):
         print(values)
         secret = values["secret"]
         showinfo("Rejoindre une partie", f"Vous avez rejoint la partie {secret}")"""
-def get_config_file():
-    home = pathlib.Path.home()
-    if sys.platform == "win32":
-        return home / "AppData/Roaming/.StatusChanger.json"
-    elif sys.platform == "linux":
-        return home / ".local/share/.StatusChanger.json"
-    elif sys.platform == "darwin":
-        return home / "Library/Application Support/.StatusChanger.json"
-def get_id():
-    def open_doc():
-        webbrowser.open("https://discord.com/developers/applications")
-    saving = os.path.join(os.path.expanduser('~'), ".presencechanger.json")
-    with open(saving, 'w') as file:
-        file.write("Helloworld!")
-    root = Tk()
-    root.iconbitmap(os.path.join(application_path, "StatusChanger.ico"))
-    root.title("StatusChanger")
-    root.geometry("300x400")
-    label = Label(root, text="ID de votre application :")
-    label.pack()
-    id = StringVar()
-    text = Entry(root, textvariable=id)
-    text.pack()
-    def check():
-        if id.get().isdigit():
-            root.destroy()
-        else:
-            showerror("ID invalide", "L'ID d'application doit être un nombre")
-    bouton = Button(root, text="Continuer", command=check, width=20)
-    bouton.pack()
-    spinbox_value = StringVar()
-    spinbox = Spinbox(root, from_=0, to=9,increment=1, textvariable=spinbox_value)
-    spinbox.pack()
-    Button(root, text="Get your ID", command=open_doc).pack()
-    lang_frame = Frame(root)
-    lang_frame.pack(side=BOTTOM)
-    root.mainloop()
-    return id.get(), spinbox_value.get()
 class Saisie:
     def __init__(self, root, name, state_name, value_name, config):
         self.config = config
         if not (state_name in config and value_name in config):
-            config[state_name] = IntVar()
-            config[value_name] = StringVar()
-        self.state = config[state_name]
-        self.value = config[value_name]
+            config["tk"][state_name] = IntVar()
+            config["tk"][value_name] = StringVar()
+        self.state = config["tk"][state_name]
+        self.value = config["tk"][value_name]
         self.name = name
         self.root = root
         self.frame = Frame(root)
@@ -130,12 +92,12 @@ class DoubleSaisie:
     def __init__(self, root, text1, text2, state_name, value1_name, value2_name, config):
         self.config = config
         if not (state_name in config and value2_name in config and value2_name in config):
-            config[state_name] = IntVar()
-            config[value1_name] = StringVar()
-            config[value2_name] = StringVar()
-        self.state = config[state_name]
-        self.value1 = config[value1_name]
-        self.value2 = config[value2_name]
+            config["tk"][state_name] = IntVar()
+            config["tk"][value1_name] = StringVar()
+            config["tk"][value2_name] = StringVar()
+        self.state = config["tk"][state_name]
+        self.value1 = config["tk"][value1_name]
+        self.value2 = config["tk"][value2_name]
         self.root = root
         self.text1 = text1
         self.text2 = text2
@@ -158,10 +120,10 @@ class SaisieInt:
     def __init__(self, root, name, state_name, value_name, config):
         self.config = config
         if not (state_name in config and value_name in config):
-            config[state_name] = IntVar()
-            config[value_name] = IntVar()
-        self.state = config[state_name]
-        self.value = config[value_name]
+            config["tk"][state_name] = IntVar()
+            config["tk"][value_name] = IntVar()
+        self.state = config["tk"][state_name]
+        self.value = config["tk"][value_name]
         self.name = name
         self.root = root
         self.state = IntVar()
@@ -184,14 +146,59 @@ class SaisieInt:
                 return None
         else:
             return None
+def get_config_file():
+    home = pathlib.Path.home()
+    if sys.platform == "win32":
+        return home / "AppData/Roaming/StatusChanger/.StatusChanger.json"
+    elif sys.platform == "linux":
+        return home / ".local/share/StatusChanger/.StatusChanger.json"
+    elif sys.platform == "darwin":
+        return home / "Library/Application Support/StatusChanger/.StatusChanger.json"
+def get_id(config):
+    def open_doc():
+        webbrowser.open("https://discord.com/developers/applications")
+    saving = os.path.join(os.path.expanduser('~'), ".presencechanger.json")
+    with open(saving, 'w') as file:
+        file.write("Helloworld!")
+    root = Tk()
+    root.iconbitmap(os.path.join(application_path, "StatusChanger.ico"))
+    root.title("StatusChanger")
+    root.geometry("300x400")
+    label = Label(root, text="ID de votre application :")
+    label.pack()
+    id = StringVar()
+    try:
+        id.set(config["values"]["application_id"])
+    except KeyError: pass
+    text = Entry(root, textvariable=id)
+    text.pack()
+    def check():
+        if id.get().isdigit():
+            root.destroy()
+        else:
+            showerror("ID invalide", "L'ID d'application doit être un nombre")
+    bouton = Button(root, text="Continuer", command=check, width=20)
+    bouton.pack()
+    spinbox_value = StringVar()
+    spinbox = Spinbox(root, from_=0, to=9,increment=1, textvariable=spinbox_value)
+    spinbox.pack()
+    Button(root, text="Get your ID", command=open_doc).pack()
+    lang_frame = Frame(root)
+    lang_frame.pack(side=BOTTOM)
+    root.mainloop()
+    config["values"]["application_id"] = id.get()
+    return id.get(), spinbox_value.get()
 
 if __name__ == "__main__":
     if getattr(sys, 'frozen', False):
         application_path = sys._MEIPASS
     else:
         application_path="."
-    id, pipe = get_id()
+    configuration = settings.Settings(get_config_file())
+    print(configuration)
+    id, pipe = get_id(config = configuration)
+    print(configuration)
     if not id == 0:
         RPC = Client(id, pipe=pipe)
         RPC.start()
-        rpc_tk = RPC_tk(RPC, id, pipe)
+        rpc_tk = RPC_tk(RPC, id, configuration, pipe)
