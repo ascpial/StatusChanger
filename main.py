@@ -36,7 +36,6 @@ class RPC_tk(Tk):
         self.send.pack()
         self.clear = Button(self, text="Clear", command=self.clear)
         self.clear.pack()
-        #self.after(1000, self.update_timer)
         self.mainloop()
     def update(self):
         buttons = []
@@ -57,14 +56,6 @@ class RPC_tk(Tk):
         self.config.save()
     def clear(self):
         self.RPC.clear_activity(os.getpid())
-    """
-    def update_timer(self):
-        self.RPC.register_event("ACTIVITY_JOIN", self.join_party)
-        self.after(1000, self.update_timer)
-    def join_party(self, values):
-        print(values)
-        secret = values["secret"]
-        showinfo("Rejoindre une partie", f"Vous avez rejoint la partie {secret}")"""
 class Saisie:
     def __init__(self, root, name, state_name, value_name, config):
         self.config = config
