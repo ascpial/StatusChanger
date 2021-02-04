@@ -45,7 +45,7 @@ class GetId(Tk):
         spinbox.pack()
         Button(self, textvariable=self.trad["get_id"], command=self.open_id_page).pack(side=BOTTOM)
         langue_frame = Frame(self)
-        fr = PhotoImage(file="./flag_fr.png")
+        fr = PhotoImage(file=os.path.join(application_path(), "flag_fr.png"))
         self.fr = fr.subsample(11, 11)
         bouton = Button(langue_frame, image=self.fr, command=self.set_fr)
         bouton.pack(side="right")
