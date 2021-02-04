@@ -6,15 +6,20 @@ import sys
 import pathlib
 import settings
 import webbrowser
+from traduction import Traduction
+from get_id import get_id
+from util import application_path
 
 class RPC_tk(Tk):
-    def __init__(self, RPC, id, config, pipe=0):
+    def __init__(self, RPC, id, config, trad, pipe=0):
         self.RPC = RPC
         self.config = config
         Tk.__init__(self)
         self.config.get_tk(self)
-        self.iconbitmap(os.path.join(application_path, "StatusChanger.ico"))
+        self.iconbitmap(os.path.join(application_path(), "StatusChanger.ico"))
         self.title(f"StatusChanger (pipe {pipe})")
+        self.trad = trad
+        self.trad.load_page(self)
         Label(self, text="StatusChanger :").pack()
         self.state = Saisie(self, "State : ", "state_state", "state_value", self.config)
         self.details = Saisie(self, "Details : ", "details_state", "details_value", self.config)
@@ -33,11 +38,11 @@ class RPC_tk(Tk):
         self.bouton2 = DoubleSaisie(self.frame, "Button2 Text :", "Url : ", "bouton2_state", "bouton2_name", "bouton2_url", self.config)
         self.frame.pack()
         self.buttons = Frame(self)
-        self.send = Button(self.buttons, text="Send RPC", command=self.update)
+        self.send = Button(self.buttons, textvariable=self.trad["send"], command=self.update)
         self.send.pack(side=LEFT)
-        self.save_button = Button(self.buttons, text="Save configuration", command=self.save)
+        self.save_button = Button(self.buttons, textvariable=self.trad["save"], command=self.save)
         self.save_button.pack(side=RIGHT)
-        self.clear = Button(self.buttons, text="Clear RPC", command=self.clear)
+        self.clear = Button(self.buttons, textvariable=self.trad["clear"], command=self.clear)
         self.clear.pack(side=BOTTOM)
         self.buttons.pack()
         self.mainloop()
@@ -149,60 +154,14 @@ def get_config_file():
         return home / ".local/share/StatusChanger/.StatusChanger.json"
     elif sys.platform == "darwin":
         return home / "Library/Application Support/StatusChanger/.StatusChanger.json"
-def get_id(config):
-    def open_doc():
-        webbrowser.open("https://discord.com/developers/applications")
-    root = Tk()
-    root.iconbitmap(os.path.join(application_path, "StatusChanger.ico"))
-    root.title("StatusChanger")
-    root.geometry("300x400")
-    label = Label(root, text="ID de votre application :")
-    label.pack()
-    id = StringVar()
-    try:
-        id.set(config["values"]["application_id"])
-    except KeyError: pass
-    text = Entry(root, textvariable=id)
-    text.pack()
-    def check():
-        if id.get().isdigit():
-            root.destroy()
-        else:
-            showerror("ID invalide", "L'ID d'application doit être un nombre")
-    def close():
-        sys.exit(0)
-    bouton = Button(root, text="Continuer", command=check, width=20)
-    bouton.pack()
-    spinbox_value = StringVar()
-    try:
-        spinbox_value.set(config["values"]["pipe"])
-    except KeyError: pass
-    spinbox = Spinbox(root, from_=0, to=9,increment=1, textvariable=spinbox_value)
-    spinbox.pack()
-    Button(root, text="Get your ID", command=open_doc).pack(side=BOTTOM)
-    lang_frame = Frame(root)
-    lang_frame.pack(side=BOTTOM)
-    root.protocol("WM_DELETE_WINDOW", close)
-    root.mainloop()
-    config["values"]["application_id"] = id.get()
-    config["values"]["pipe"]           = spinbox_value.get()
-    return id.get(), spinbox_value.get()
 
 if __name__ == "__main__":
-    if getattr(sys, 'frozen', False):
-        application_path = sys._MEIPASS
-    else:
-        application_path="."
     configuration = settings.Settings(get_config_file())
-    print(configuration)
-    id, pipe = get_id(config = configuration)
-    print(configuration)
+    id, pipe, trad = get_id(config = configuration)
     if not id == 0:
         try:
             RPC = Client(id, pipe=pipe)
             RPC.start()
-        except pypresence.exceptions.InvalidPipe:
+        except exceptions.InvalidPipe:
             pass
-        rpc_tk = RPC_tk(RPC, id, configuration, pipe)
-
-mot = lambda mot: mot[0]+random.shuffle(list(mot[1:-1]))+mot[-1]
+        rpc_tk = RPC_tk(RPC, id, configuration, trad, pipe)
