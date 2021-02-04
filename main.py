@@ -1,6 +1,6 @@
 from tkinter import *
 from tkinter.messagebox import *
-from pypresence import Client
+from pypresence import Client, exceptions
 import os
 import sys
 import pathlib
@@ -32,11 +32,21 @@ class RPC_tk(Tk):
         self.bouton1 = DoubleSaisie(self.frame, "Button1 Text :", "Url : ", "bouton1_state", "bouton1_name", "bouton1_url", self.config)
         self.bouton2 = DoubleSaisie(self.frame, "Button2 Text :", "Url : ", "bouton2_state", "bouton2_name", "bouton2_url", self.config)
         self.frame.pack()
-        self.send = Button(self, text="Envoyer", command=self.update)
-        self.send.pack()
-        self.clear = Button(self, text="Clear", command=self.clear)
-        self.clear.pack()
+        self.buttons = Frame(self)
+        self.send = Button(self.buttons, text="Send RPC", command=self.update)
+        self.send.pack(side=LEFT)
+        self.save_button = Button(self.buttons, text="Save configuration", command=self.save)
+        self.save_button.pack(side=RIGHT)
+        self.clear = Button(self.buttons, text="Clear RPC", command=self.clear)
+        self.clear.pack(side=BOTTOM)
+        self.buttons.pack()
         self.mainloop()
+    def save(self):
+        self.start.check()
+        self.end.check()
+        self.party_size.check()
+        self.number_players.check()
+        self.config.save()
     def update(self):
         buttons = []
         for bouton in (self.bouton1, self.bouton2):
@@ -53,7 +63,7 @@ class RPC_tk(Tk):
                         start=self.start.get(), end=self.end.get(),
                         buttons=buttons, party_size=party_size,
                         party_id=self.party_id.get(),join=self.join.get())
-        self.config.save()
+        self.save()
     def clear(self):
         self.RPC.clear_activity(os.getpid())
 class Saisie:
@@ -112,31 +122,25 @@ class SaisieInt:
         self.config = config
         if not (state_name in config["tk"] and value_name in config["tk"]):
             config["tk"][state_name] = IntVar()
-            config["tk"][value_name] = IntVar()
+            config["tk"][value_name] = StringVar()
         self.state = config["tk"][state_name]
         self.value = config["tk"][value_name]
         self.name = name
-        self.root = root
-        self.state = IntVar()
-        self.state.set(0)
+        self.root = Radiobutton
         self.frame = Frame(root)
         Checkbutton(self.frame, text=self.name, variable=self.state).grid(row=0,column=0)
-        self.value = StringVar()
         Entry(self.frame, textvariable=self.value).grid(row=0,column=1)
         self.frame.pack()
     def get(self):
+        self.check()
         if self.state.get() == 1:
-            try:
-                if self.value.get() == "":
-                    self.state.set(0)
-                    return None
-                else:
-                    return int(self.value.get())
-            except ValueError:
-                self.state.set(0)
-                return None
+            return int(self.value.get())
         else:
             return None
+    def check(self):
+        if not self.value.get().isdigit():
+            self.state.set(0)
+            self.value.set(0)
 def get_config_file():
     home = pathlib.Path.home()
     if sys.platform == "win32":
@@ -148,9 +152,6 @@ def get_config_file():
 def get_id(config):
     def open_doc():
         webbrowser.open("https://discord.com/developers/applications")
-    saving = os.path.join(os.path.expanduser('~'), ".presencechanger.json")
-    with open(saving, 'w') as file:
-        file.write("Helloworld!")
     root = Tk()
     root.iconbitmap(os.path.join(application_path, "StatusChanger.ico"))
     root.title("StatusChanger")
@@ -168,16 +169,23 @@ def get_id(config):
             root.destroy()
         else:
             showerror("ID invalide", "L'ID d'application doit être un nombre")
+    def close():
+        sys.exit(0)
     bouton = Button(root, text="Continuer", command=check, width=20)
     bouton.pack()
     spinbox_value = StringVar()
+    try:
+        spinbox_value.set(config["values"]["pipe"])
+    except KeyError: pass
     spinbox = Spinbox(root, from_=0, to=9,increment=1, textvariable=spinbox_value)
     spinbox.pack()
-    Button(root, text="Get your ID", command=open_doc).pack()
+    Button(root, text="Get your ID", command=open_doc).pack(side=BOTTOM)
     lang_frame = Frame(root)
     lang_frame.pack(side=BOTTOM)
+    root.protocol("WM_DELETE_WINDOW", close)
     root.mainloop()
     config["values"]["application_id"] = id.get()
+    config["values"]["pipe"]           = spinbox_value.get()
     return id.get(), spinbox_value.get()
 
 if __name__ == "__main__":
@@ -190,6 +198,11 @@ if __name__ == "__main__":
     id, pipe = get_id(config = configuration)
     print(configuration)
     if not id == 0:
-        RPC = Client(id, pipe=pipe)
-        RPC.start()
+        try:
+            RPC = Client(id, pipe=pipe)
+            RPC.start()
+        except pypresence.exceptions.InvalidPipe:
+            pass
         rpc_tk = RPC_tk(RPC, id, configuration, pipe)
+
+mot = lambda mot: mot[0]+random.shuffle(list(mot[1:-1]))+mot[-1]

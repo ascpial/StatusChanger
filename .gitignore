@@ -2,3 +2,5 @@
 output/
 __pycache__/
 .vscode/
+StatusChanger-cache/
+StatusChanger-SetupFiles/
