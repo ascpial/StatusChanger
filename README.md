@@ -6,24 +6,25 @@
 ## Présentation
 
 Ce programme est utilisé pour créer des status avancés personnalisés tels que celui ci :
-<img src="https://www.qwant.com/favicon.ico">
 
-<img src="https://www.qwant.com/favicon.ico">
+![small_profil](assets/small_profil_example.png)
+
+![large_profil](assets/large_profil_example.png)
 
 Il utilise le [client RPC de discord](https://discord.com/developers/docs/topics/rpc) et une interface très simple :
 
-<img src="https://www.qwant.com/favicon.ico">
+![preview](assets/application_preview.png)
 
 ## Prérequis
 
-Vous devez avoir un compte discord et un [id d'application discord](https://discord.com/developers/applications).
+Vous devez avoir un compte discord sur l'application bureau et un [id d'application discord](https://discord.com/developers/applications).
 
-Après avoir installé l'application, cette interface apparaît :
+Après avoir installé et lancé l'application, cette interface apparaît :
 
-<img src="https://www.qwant.com/favicon.ico">
+![first_interface](assets/first_interface.png)
 
 Mettez votre ID d'application dans le champs de saisie et sélectionnez `Continuer`.
 
-Cette nouvelle interface apparaît et je vous invite à aller voir la [documentation discord](https://discord.com/developers/docs/rich-presence/how-to#updating-presence-update-presence-payload-fields) pour savoir à quoi correspondent chaques champs.
+Cette nouvelle interface apparaît et je vous invite à aller voir la [documentation discord](https://discord.com/developers/docs/rich-presence/how-to#updating-presence-update-presence-payload-fields) pour savoir à quoi correspondent chaque champ.
 
-<img src="https://www.qwant.com/favicon.ico">
+![preview](assets/application_preview.png)
