@@ -7,7 +7,7 @@ import pathlib
 import settings
 import webbrowser
 from traduction import Traduction
-from get_id import get_id
+from get_id import GetId
 from util import application_path
 
 class RPC_tk(Tk):
@@ -157,7 +157,8 @@ def get_config_file():
 
 if __name__ == "__main__":
     configuration = settings.Settings(get_config_file())
-    id, pipe, trad = get_id(config = configuration)
+    get_id = GetId(configuration)
+    id, pipe, trad = get_id.mainloop()
     if not id == 0:
         try:
             RPC = Client(id, pipe=pipe)

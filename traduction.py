@@ -46,7 +46,7 @@ class Traduction(dict):
             self.langue = langue
         if self.langue=="fr":
             self["send"].set("Envoyer")
-            self["clear"].set("Effcacer")
+            self["clear"].set("Effacer")
             self["save"].set("Sauvegarder")
         elif self.langue=="en":
             self["send"].set("Send")
