@@ -4,3 +4,5 @@ __pycache__/
 .vscode/
 StatusChanger-cache/
 StatusChanger-SetupFiles/
+build/
+dist/
