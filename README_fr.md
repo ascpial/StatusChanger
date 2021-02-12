@@ -37,8 +37,8 @@ Cette nouvelle interface apparaît et je vous invite à aller voir la [documenta
 
 Pour télécharger un fichier executable ou un installeur, rendez vous dans le dossier [downloads](https://github.com/ascpial/StatusChanger/tree/main/downloads).
 
-- [Fichier executable]()
-- [Installeur]()
+- [Fichier executable](https://github.com/ascpial/StatusChanger/blob/main/downloads/StatusChanger.exe)
+- [Installeur](https://github.com/ascpial/StatusChanger/blob/main/downloads/StatusChangerInstaller.exe)
 
 ## Créez votre propre jeu
 

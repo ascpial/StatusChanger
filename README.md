@@ -33,6 +33,13 @@ This new interface appears. I advise you to go check the [ discord documentation
 
 > To send your rich presence, click on `send`. If you  want to remove your personalized status without closing the app, click on `remove`. To save your own configuration without sending the rich presence, click on `save`.
 
+## Downloads
+
+To download an executable or an installer, refer to the download folder [downloads](https://github.com/ascpial/StatusChanger/tree/main/downloads).
+
+- [Executable file](https://github.com/ascpial/StatusChanger/blob/main/downloads/StatusChanger.exe)
+- [Installer](https://github.com/ascpial/StatusChanger/blob/main/downloads/StatusChangerInstaller.exe)
+
 ## Create your own game
 
 To change the name of the "game" you're playing, you must create an application on the [ discord developpement] page (https://discord.com/developers/applications).
