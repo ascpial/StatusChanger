@@ -33,6 +33,13 @@ Cette nouvelle interface apparaît et je vous invite à aller voir la [documenta
 
 > Pour envoyer votre riche presence, appuyez sur `Envoyer`. Si vous voulez retirer votre status sans fermer l'application, appuiez sur `Effacer`. Pour sauvegarder votre configuration sans envoyer le rich presence, appuiyez sur `Sauvegarder`
 
+## Téléchargements
+
+Pour télécharger un fichier executable ou un installeur, rendez vous dans le dossier [downloads](https://github.com/ascpial/StatusChanger/tree/main/downloads).
+
+- [Fichier executable]()
+- [Installeur]()
+
 ## Créez votre propre jeu
 
 Pour changer le nom du jeu auquel vous jouez, vous devez créer une application sur la page de [développement de discord](https://discord.com/developers/applications).
