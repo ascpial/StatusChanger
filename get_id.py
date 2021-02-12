@@ -37,6 +37,7 @@ class GetId(Tk):
         text.pack()
         bouton = Button(self, textvariable=self.trad["continue"], command=self.check, width=20)
         bouton.pack()
+        self.bind("<Return>", self.check)
         self.spinbox_value = StringVar()
         try:
             self.spinbox_value.set(self.config["values"]["pipe"])
@@ -57,7 +58,7 @@ class GetId(Tk):
         webbrowser.open("https://discord.com/developers/applications")
     def close_application(self):
         sys.exit(0)
-    def check(self):
+    def check(self, event=None):
         if self.id.get().isdigit():
             self.destroy()
         else:

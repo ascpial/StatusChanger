@@ -40,6 +40,7 @@ class RPC_tk(Tk):
         self.buttons = Frame(self)
         self.send = Button(self.buttons, textvariable=self.trad["send"], command=self.update)
         self.send.pack(side=LEFT)
+        self.bind("<Return>", self.update)
         self.save_button = Button(self.buttons, textvariable=self.trad["save"], command=self.save)
         self.save_button.pack(side=RIGHT)
         self.clear = Button(self.buttons, textvariable=self.trad["clear"], command=self.clear)
@@ -52,7 +53,7 @@ class RPC_tk(Tk):
         self.party_size.check()
         self.number_players.check()
         self.config.save()
-    def update(self):
+    def update(self, event=None):
         buttons = []
         for bouton in (self.bouton1, self.bouton2):
             if bouton.get() != None:
@@ -62,7 +63,7 @@ class RPC_tk(Tk):
         party_size = [self.number_players.get(), self.party_size.get()]
         if party_size == [None, None]:
             party_size=None
-        self.RPC.set_activity(pid=os.getpid(), state=self.state.get(), details=self.details.get(),
+        self.RPC.set_activity(state=self.state.get(), details=self.details.get(),
                         large_image=self.large_image_key.get(), large_text = self.large_image_text.get(),
                         small_image = self.small_image_key.get(), small_text=self.small_image_text.get(),
                         start=self.start.get(), end=self.end.get(),
@@ -70,7 +71,7 @@ class RPC_tk(Tk):
                         party_id=self.party_id.get(),join=self.join.get())
         self.save()
     def clear(self):
-        self.RPC.clear_activity(os.getpid())
+        self.RPC.clear_activity()
 class Saisie:
     def __init__(self, root, name, state_name, value_name, config):
         self.config = config
