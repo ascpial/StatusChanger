@@ -6,3 +6,4 @@ StatusChanger-cache/
 StatusChanger-SetupFiles/
 build/
 dist/
+*.spec

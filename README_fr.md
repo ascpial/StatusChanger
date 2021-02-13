@@ -1,8 +1,8 @@
 # Discord StatusChanger
 
 [![pypresence](https://img.shields.io/badge/using-pypresence-00bb88.svg?style=for-the-badge&logo=discord&logoWidth=20)](https://github.com/qwertyquerty/pypresence)
-![license](https://img.shields.io/badge/LICENSE-MIT-1?style=for-the-badge)
-
+[![license](https://img.shields.io/badge/LICENSE-MIT-1?style=for-the-badge)](https://github.com/ascpial/StatusChanger/blob/main/LICENSE.md)
+[![english](https://img.shields.io/badge/README-English%20version-red?style=for-the-badge)](https://github.com/ascpial/StatusChanger/blob/main/README.md)
 ## Présentation
 
 Ce programme permet de créer des status avancés personnalisés tels que celui ci sur discord :
