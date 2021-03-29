@@ -9,6 +9,7 @@ import webbrowser
 from traduction import Traduction
 from get_id import GetId
 from util import application_path
+from datetime import datetime
 
 class RPC_tk(Tk):
     def __init__(self, RPC, id, config, trad, pipe=0):
@@ -23,7 +24,7 @@ class RPC_tk(Tk):
         Label(self, text="StatusChanger :").pack()
         self.state = Saisie(self, "State : ", "state_state", "state_value", self.config)
         self.details = Saisie(self, "Details : ", "details_state", "details_value", self.config)
-        self.start = SaisieInt(self, "Start : ", "start_state", "start_value", self.config)
+        self.start = SaisieDate(self, "Start : ", "start_state", "start_value", self.config)
         self.end = SaisieInt(self, "End : ", "end_state", "end_value", self.config)
         self.large_image_key = Saisie(self, "Large Image Key : ", "large_key_state", "large_key_value", self.config)
         self.large_image_text = Saisie(self, "Large Image Text : ", "large_text_state", "large_text_value", self.config)
@@ -147,6 +148,96 @@ class SaisieInt:
         if not self.value.get().isdigit():
             self.state.set(0)
             self.value.set(0)
+class SaisieDate:
+    def __init__(self, root, name, state_name, value_name, config):
+        self.config = config
+        if not (state_name in config["tk"] and value_name in config["tk"]):
+            config["tk"][state_name] = IntVar()
+            config["tk"][value_name] = StringVar()
+        self.state = config["tk"][state_name]
+        self.value = config["tk"][value_name]
+        self.name = name
+        self.root = root
+        self.frame = Frame(root)
+        Checkbutton(self.frame, text=self.name, variable=self.state).grid(row=0,column=0)
+        Entry(self.frame, textvariable=self.value).grid(row=0,column=1)
+        Button(self.frame, textvariable=self.root.trad["change"], command=self.update).grid(row=0, column=2)
+        self.frame.pack()
+    def get(self):
+        self.check()
+        if self.state.get() == 1:
+            return int(self.value.get())
+        else:
+            return None
+    def check(self):
+        if not self.value.get().isdigit():
+            self.state.set(0)
+            self.value.set(0)
+    def update(self):
+        date = InputDate(self.root, self.value)
+class InputDate:
+    def __init__(self, root, end_value):
+        self.root = root
+        self.root.trad.load_date_input(self.root)
+        self.root.trad.set_date_input()
+        self.top = Toplevel(self.root)
+        self.top.grab_set()
+        self.year   = IntVar()
+        self.month  = IntVar()
+        self.day    = IntVar()
+        self.hour   = IntVar()
+        self.minute = IntVar()
+        self.second = IntVar()
+        self.end_value = end_value
+        if self.end_value.get():
+            try:
+                self.set(int(self.end_value.get()))
+            except ImportError:
+                self.set(31532399.0)
+        else:
+            self.set(31532399.0)
+        Label(self.top, textvariable=self.root.trad["date"]).pack()
+        self.date = Frame(self.top)
+        Spinbox(self.date, from_=1, to=31, width=2, textvariable=self.day).grid(row=0, column=self.root.trad["day_n"])
+        Label(self.date, text="/").grid(row=0, column=1)
+        Spinbox(self.date, from_=1, to=12, width=2, textvariable=self.month).grid(row=0, column=self.root.trad["month_n"])
+        Label(self.date, text="/").grid(row=0, column=3)
+        Spinbox(self.date, from_=1970, to=2038, width=4, textvariable=self.year).grid(row=0, column=4)
+        self.date.pack()
+        Label(self.top, textvariable=self.root.trad["hour"]).pack()
+        self.time = Frame(self.top)
+        Spinbox(self.time, from_=0, to=23, width=2, textvariable=self.hour).grid(row=0, column=0)
+        Label(self.time, text=":").grid(row=0, column=1)
+        Spinbox(self.time, from_=0, to=59, width=2, textvariable=self.minute).grid(row=0, column=2)
+        Label(self.time, text=":").grid(row=0, column=3)
+        Spinbox(self.time, from_=0, to=59, width=2, textvariable=self.second).grid(row=0, column=4)
+        self.time.pack()
+        Button(self.top, textvariable=self.root.trad["set"], command=self.done).pack()
+        Button(self.top, textvariable=self.root.trad["cancel"], command=self.cancel).pack()
+    def cancel(self):
+        self.top.destroy()
+    def done(self):
+        if self.get():
+            self.end_value.set(self.get())
+        else:
+            showerror(self.root.trad["error"].get(), self.root.trad["invalide date"].get())
+        self.top.destroy()
+    def get(self):
+        try:
+            return int(datetime(year=self.year.get(), month=self.month.get(), day=self.day.get(),
+                hour=self.hour.get(), minute=self.minute.get(), second=self.second.get()).timestamp())
+        except:
+            return None
+    def set(self, value):
+        time = datetime.fromtimestamp(value)
+        self.year.set(time.year)
+        self.month.set(time.month)
+        self.day.set(time.day)
+        self.hour.set(time.hour)
+        self.minute.set(time.minute)
+        self.second.set(time.second)
+        self.value = value
+
 def get_config_file():
     home = pathlib.Path.home()
     if sys.platform == "win32":
