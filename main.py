@@ -25,7 +25,7 @@ class RPC_tk(Tk):
         self.state = Saisie(self, "State : ", "state_state", "state_value", self.config)
         self.details = Saisie(self, "Details : ", "details_state", "details_value", self.config)
         self.start = SaisieDate(self, "Start : ", "start_state", "start_value", self.config)
-        self.end = SaisieInt(self, "End : ", "end_state", "end_value", self.config)
+        self.end = SaisieDate(self, "End : ", "end_state", "end_value", self.config)
         self.large_image_key = Saisie(self, "Large Image Key : ", "large_key_state", "large_key_value", self.config)
         self.large_image_text = Saisie(self, "Large Image Text : ", "large_text_state", "large_text_value", self.config)
         self.small_image_key = Saisie(self, "Small Image Key : ", "small_key_state", "small_key_value", self.config)
