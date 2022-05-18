@@ -43,7 +43,7 @@ To download an executable or an installer, refer to the download folder [downloa
 
 ## Create your own game
 
-To change the name of the "game" you're playing, you must create an application on the [ discord developpement] page (https://discord.com/developers/applications).
+To change the name of the "game" you're playing, you must create an application on the [discord developpement page](https://discord.com/developers/applications).
 
 Create an "application":
 
